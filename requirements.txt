@@ -1,0 +1,9 @@
+pandas
+sqlalchemy
+psycopg2-binary
+pytest
+dbt-core
+dbt-postgres
+dagster
+dagster-dbt
+requests

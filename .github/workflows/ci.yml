@@ -1,0 +1,56 @@
+name: ETL Pipeline CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: newpassword123
+          POSTGRES_DB: order_quality_analytics_db
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Install dbt deps
+      run: |
+        cd order_quality_project
+        dbt deps
+
+    - name: Setup dbt profile
+      run: |
+        mkdir -p ~/.dbt
+        echo "
+        order_quality:
+          target: dev
+          outputs:
+            dev:
+              type: postgres
+              host: localhost
+              user: postgres
+              password: newpassword123
+              dbname: order_quality_analytics_db
+              schema: public
+              port: 5432
+        " > ~/.dbt/profiles.yml
+
