@@ -7,3 +7,5 @@ dbt-postgres
 dagster
 dagster-dbt
 requests
+
+dbt-postgres

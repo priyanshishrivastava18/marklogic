@@ -34,7 +34,7 @@ jobs:
 
     - name: Install dbt deps
       run: |
-        cd order_quality_project
+        cd dags/order_quality_project
         dbt deps
 
     - name: Setup dbt profile
